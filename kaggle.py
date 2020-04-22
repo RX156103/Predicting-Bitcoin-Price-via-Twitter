@@ -3,16 +3,13 @@
 # https://www.geeksforgeeks.org/twitter-sentiment-analysis-using-python/
 
 
-import numpy as np # used for handling numbers
 import pandas as pd # used for handling the dataset
 import preprocessor as p
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import csv
 import re #regular expression
 import string
 import emoji
-import tweepy
 from textblob import TextBlob
 
 # Happy Emoticons
@@ -45,15 +42,21 @@ emoji_pattern = re.compile("["
 emoticons = emoticons_happy.union(emoticons_sad)
 
 def extract_emojis(tweet):
+    '''
+    This function will extract emoji from tweet
+    :param tweet: tweet text
+    :return: string of emoji with comma separated
+    '''
     str_emoji = ','.join([c for c in tweet if c in emoji.UNICODE_EMOJI])
     return str_emoji
 
 
 def extract_hashtag(tweet):
     '''
+    This function will extract hashtag from tweet
     https://stackoverflow.com/questions/2527892/parsing-a-tweet-to-extract-hashtags-into-an-array/20614981#20614981
     :param tweet: tweet text
-    :return: hashtag list
+    :return: string of hashtag with comma separated
     '''
     hashtag = re.findall(r'\B#\w*[a-zA-Z]+\w*', tweet)
     str_hash = ','.join([str(elem) for elem in hashtag])
@@ -62,9 +65,10 @@ def extract_hashtag(tweet):
 
 def check_balance(tweet):
     '''
+    This function will check if the parentheses balance or not
     https://www.geeksforgeeks.org/check-for-balanced-parentheses-in-python/
-    :param tweet:
-    :return:
+    :param tweet: tweet text
+    :return: feedback
     '''
     open_tup = tuple('({[')
     close_tup = tuple(')}]')
@@ -85,6 +89,7 @@ def check_balance(tweet):
 
 def clean_tweets_zero(tweet):
     '''
+    This function will remove parenthesis area in a tweet
     https://www.w3resource.com/python-exercises/re/python-re-exercise-50.php
     :param tweet:
     :return:
@@ -120,6 +125,11 @@ def clean_tweets_zero(tweet):
     return res
 
 def clean_tweets_one(tweet):
+    '''
+    This function will remove emoji and link URL from the tweet
+    :param tweet: tweet text
+    :return: tweet with removed emoji and link URL
+    '''
     clean_text = p.clean(tweet)
     return clean_text
 
@@ -129,7 +139,7 @@ def clean_tweets_two(tweet):
     Removing stop words with NLTK in Python.
     https://www.geeksforgeeks.org/removing-stop-words-nltk-python/
     :param tweet: original tweet
-    :return: cleaned tweet
+    :return: tweet after remove stop word
     '''
     stop_words = set(stopwords.words('english'))
     word_tokens = word_tokenize(tweet)
@@ -152,15 +162,21 @@ def clean_tweets_two(tweet):
 
 
 def get_tweet_sentiment(tweet):
-        # create TextBlob object of passed tweet text
-        analysis = TextBlob(tweet)
-        # set sentiment
-        if analysis.sentiment.polarity > 0:
-            return 'positive'
-        elif analysis.sentiment.polarity == 0:
-            return 'neutral'
-        else:
-            return 'negative'
+    '''
+    This function will analysis the tweet using text blob
+    https://www.geeksforgeeks.org/twitter-sentiment-analysis-using-python/
+    :param tweet: tweet text
+    :return: feedback
+    '''
+    # create TextBlob object of passed tweet text
+    analysis = TextBlob(tweet)
+    # set sentiment
+    if analysis.sentiment.polarity > 0:
+        return 'positive'
+    elif analysis.sentiment.polarity == 0:
+        return 'neutral'
+    else:
+        return 'negative'
 
 
 def main():

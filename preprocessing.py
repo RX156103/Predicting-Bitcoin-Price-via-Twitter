@@ -45,21 +45,32 @@ emoji_pattern = re.compile("["
 emoticons = emoticons_happy.union(emoticons_sad)
 
 def extract_emojis(tweet):
+    '''
+    This function will extract emoji from tweet
+    :param tweet: tweet text
+    :return: string of emoji with comma separated
+    '''
     str_emoji = ','.join([c for c in tweet if c in emoji.UNICODE_EMOJI])
     return str_emoji
 
 
 def extract_hashtag(tweet):
     '''
+    This function will extract hashtag from tweet
     https://stackoverflow.com/questions/2527892/parsing-a-tweet-to-extract-hashtags-into-an-array/20614981#20614981
     :param tweet: tweet text
-    :return: hashtag list
+    :return: string of hashtag with comma separated
     '''
     hashtag = re.findall(r'\B#\w*[a-zA-Z]+\w*', tweet)
     str_hash = ','.join([str(elem) for elem in hashtag])
     return str_hash
 
 def clean_tweets_one(tweet):
+    '''
+    This function will remove emoji and link URL from the tweet
+    :param tweet: tweet text
+    :return: tweet with removed emoji and link URL
+    '''
     clean_text = p.clean(tweet)
     return clean_text
 
@@ -92,16 +103,21 @@ def clean_tweets_two(tweet):
 
 
 def get_tweet_sentiment(tweet):
-
-        # create TextBlob object of passed tweet text
-        analysis = TextBlob(tweet)
-        # set sentiment
-        if analysis.sentiment.polarity > 0:
-            return 'positive'
-        elif analysis.sentiment.polarity == 0:
-            return 'neutral'
-        else:
-            return 'negative'
+    '''
+    This function will analysis the tweet using text blob
+    https://www.geeksforgeeks.org/twitter-sentiment-analysis-using-python/
+    :param tweet: tweet text
+    :return: feedback
+    '''
+    # create TextBlob object of passed tweet text
+    analysis = TextBlob(tweet)
+    # set sentiment
+    if analysis.sentiment.polarity > 0:
+        return 'positive'
+    elif analysis.sentiment.polarity == 0:
+        return 'neutral'
+    else:
+        return 'negative'
 
 
 def main():
